@@ -1,0 +1,70 @@
+---
+rooms:
+  backyard:
+    doors:
+      living-room:
+  living-room:
+    description: |
+      This is a really big room with a nice sofa and beautiful TV.
+      You could stay here for a really long time... but you won't.
+    doors:
+      backyard:
+        lock: master-key
+        name: Secret
+      hallway:
+      kitchen:
+  kitchen:
+    description: This is a really big room full of tastey food.
+    doors:
+      living-room:
+      pantry:
+  hallway:
+    description: |
+      This room is full of paper and markers and general stuff that
+      you cannot pick up.  You wouldn't want to anyway. Just a nice place to
+      walk through.
+    doors:
+      living-room:
+      front-bedroom:
+      middle-bedroom:
+        lock: spider-key
+      back-bedroom:
+  front-bedroom:
+    description: |
+      You can tell two loving sisters sleep in this room.
+    doors:
+      hallway:
+  middle-bedroom:
+    description: |
+      Nice bed and pretty yellow curtains.
+      I bet a sweet girl sleeps in this room
+    doors:
+      hallway:
+      back-bedroom:
+    items:
+    - master-key
+  back-bedroom:
+    description: |
+      Someone in this room loves to read books.  How cool.
+    doors:
+      hallway:
+      middle-bedroom:
+        lock: spider-key
+  pantry:
+    description: Oooh... full of Cheezits -- but you can't take them
+    doors:
+      kitchen:
+    items:
+      - spider-key
+begin:
+  room: living-room
+  intro: |
+    You find yourself in the living room of someone's home.  You need to get
+    out before someone finds you walking around in their house.  Certainly
+    you can figure out how to get into the backyard... if you just keep
+    looking for the way out.
+goals:
+  room: backyard
+  outro: |
+    Congratualations, you got out before beind spotted by the home's owners
+    That's pretty fortunate!
