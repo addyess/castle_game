@@ -63,7 +63,7 @@ begin:
     out before someone finds you walking around in their house.  Certainly
     you can figure out how to get into the backyard... if you just keep
     looking for the way out.
-goals:
+end:
   room: backyard
   outro: |
     Congratualations, you got out before beind spotted by the home's owners

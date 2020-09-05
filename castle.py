@@ -1,3 +1,5 @@
+# /usr/bin/env python3
+
 import abc
 import sys
 import yaml
@@ -93,17 +95,17 @@ class Player:
         return self.visited_rooms[-1]
 
 
-class Goal:
-    def __init__(self, goal):
-        self.room = Room(goal['room'])
-        self.outro = goal.get('outro') or "Complete!"
+class End:
+    def __init__(self, end):
+        self.room = Room(end['room'])
+        self.outro = end.get('outro') or "Complete!"
 
 
 class Game(abc.ABC):
     def __init__(self, game_map):
         rooms, begin = game_map['rooms'], game_map['begin']
         self.rooms = {name: Room(name, _) for name, _ in rooms.items()}
-        self.goals = Goal(game_map['goals'])
+        self.end = End(game_map['end'])
         self.player = Player(
             self.rooms[begin['room']],
             begin.get('items') or []
@@ -112,8 +114,8 @@ class Game(abc.ABC):
             self.respond(begin['intro'])
 
     @property
-    def reached_goal(self):
-        return self.player.current_room.name == self.goals.room.name
+    def reached_end(self):
+        return self.player.current_room.name == self.end.room.name
 
     @abc.abstractmethod
     def prompt(self):
@@ -144,10 +146,10 @@ class Game(abc.ABC):
         return fn(self, args)
 
     def run(self):
-        while not self.reached_goal:
+        while not self.reached_end:
             self.act()
         self.status()
-        self.respond(self.goals.outro)
+        self.respond(self.end.outro)
 
     @classmethod
     def parse(cls, filepath):
