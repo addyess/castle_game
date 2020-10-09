@@ -9,7 +9,8 @@ rooms:
       You could stay here for a really long time... but you won't.
     doors:
       backyard:
-        lock: master-key
+        requires:
+        - master-key
         name: Secret
       hallway:
       kitchen:
@@ -27,7 +28,8 @@ rooms:
       living-room:
       front-bedroom:
       middle-bedroom:
-        lock: spider-key
+        requires:
+        - spider-key
       back-bedroom:
   front-bedroom:
     description: |
@@ -41,7 +43,7 @@ rooms:
     doors:
       hallway:
       back-bedroom:
-    items:
+    provides:
     - master-key
   back-bedroom:
     description: |
@@ -49,13 +51,14 @@ rooms:
     doors:
       hallway:
       middle-bedroom:
-        lock: spider-key
+        requires:
+        - spider-key
   pantry:
     description: Oooh... full of Cheezits -- but you can't take them
     doors:
       kitchen:
-    items:
-      - spider-key
+    provides:
+    - spider-key
 begin:
   room: living-room
   intro: |

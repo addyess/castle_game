@@ -5,18 +5,29 @@ import sys
 import yaml
 
 
-class Door:
-    def __init__(self, room, door):
-        self.room = room
-        door = door or {}
-        self.name = door.get('name') or room
-        self._unlock_with = door.get("lock")
-        self.locked = self._unlock_with is not None
+class Item:
+    def __init__(self, data):
+        self.requires = set(data.get("requires") or [])
+        self.needs_met = not self.requires
 
     def use(self, item):
-        valid = self.locked and self._unlock_with == item
-        self.locked ^= valid
-        return valid
+        if item not in self.requires:
+            return False
+        self.requires = set(self.requires) - {item}
+        self.needs_met = not self.requires
+        return True
+
+
+class Door(Item):
+    def __init__(self, room, door):
+        door = door or {}
+        super(Door, self).__init__(door)
+        self.room = room
+        self.name = door.get('name') or room
+
+    @property
+    def locked(self):
+        return not self.needs_met
 
 
 class Room:
@@ -29,7 +40,7 @@ class Room:
             for room, d in room.get("doors", {}).items()
         ]
         self.doors = {d.name.lower(): d for d in doors}
-        self.items = set(room.get("items", []))
+        self.items = set(room.get("provides", []))
 
     @property
     def described(self):
@@ -83,8 +94,7 @@ class Player:
             return game.respond("% That Door isn't in this room")
         if item not in self.items:
             return game.respond("% This isn't an item you have")
-        used = room.doors[door_name.lower()].use(item)
-        if used:
+        if room.doors[door_name.lower()].use(item):
             self.items.remove(item)
             return game.respond(f"Successfully used {item} on {door_name}")
         else:
@@ -108,7 +118,7 @@ class Game(abc.ABC):
         self.end = End(game_map['end'])
         self.player = Player(
             self.rooms[begin['room']],
-            begin.get('items') or []
+            begin.get('provides') or []
         )
         if 'intro' in begin:
             self.respond(begin['intro'])
